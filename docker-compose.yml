@@ -1,0 +1,32 @@
+version: '3.9'
+
+
+services:
+
+  ca: 
+    container_name: iot-tunnel-ca
+    build: ./ca
+    ports:
+      - 8888:8888
+    networks:
+      - default
+  
+  ovpn-server:
+    container_name: iot-tunnel-ovpn-server
+    build: ./ovpn-server
+    ports:
+      - 443:443
+    cap_add:
+      - NET_ADMIN
+    # devices:
+    #   - /dev/net/tun
+    networks:
+      - default
+    depends_on: 
+      - ca
+
+
+networks:
+  default:
+
+    
