@@ -29,6 +29,20 @@ services:
       - common:/etc/common/
       - ovpn-pki:/etc/openvpn/server/pki
 
+  client-configurer:
+    container_name: iot-tunnel-client-configurer
+    build: ./client
+    command: ./entrypoint.sh
+    env_file:
+      - .env.dev
+    networks:
+      - default
+    depends_on:
+      - ca
+      - ovpn-server
+    volumes:
+      - common:/etc/common
+
 
 networks:
   default:
