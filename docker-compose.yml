@@ -3,14 +3,17 @@ version: '3.3'
 
 services:
 
-  ca: 
+  ca:
     container_name: iot-tunnel-ca
     build: ./ca
     ports:
       - 8888:8888
     networks:
       - default
-  
+    volumes:
+      - common:/etc/common/
+      - ca-pki:/etc/cfssl/ca/pki
+
   ovpn-server:
     container_name: iot-tunnel-ovpn-server
     build: ./ovpn-server
@@ -18,15 +21,23 @@ services:
       - 443:443
     cap_add:
       - NET_ADMIN
-    # devices:
-    #   - /dev/net/tun
     networks:
       - default
-    depends_on: 
+    depends_on:
       - ca
+    volumes:
+      - common:/etc/common/
+      - ovpn-pki:/etc/openvpn/server/pki
 
 
 networks:
   default:
+    name: iot-tunnel-default-network
 
-    
+volumes:
+  common:
+    name: iot-tunnel-common-volume
+  ca-pki:
+    name: iot-tunnel-ca-pki
+  ovpn-pki:
+    name: iot-tunnel-ovpn-pki

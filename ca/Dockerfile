@@ -5,16 +5,13 @@ LABEL maintainer="Mateusz Kubica <mateusz.kubica99@gmail.com>"
 RUN apt update && apt upgrade && apt install golang-cfssl -y
 
 EXPOSE 8888
+VOLUME /etc/common/
+VOLUME /etc/cfssl/ca/pki
 
-WORKDIR /cfssl/ca
-COPY config .
-RUN cfssl gencert -initca ca-csr.json | cfssljson -bare ca -  
+WORKDIR /etc/cfssl/ca
+COPY ./config .
 
-CMD cfssl serve \
-	-address=0.0.0.0 \
-	-port=8888 \
-	-ca=ca.pem \
-	-ca-key=ca-key.pem \
-	-config=ca-config.json
+RUN chmod +x entrypoint.sh
+CMD ./entrypoint.sh
 
 

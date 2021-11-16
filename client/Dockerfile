@@ -2,13 +2,11 @@ FROM ubuntu:latest
 
 LABEL maintainer="Mateusz Kubica <mateusz.kubica99@gmail.com>"
 
-RUN apt update && apt upgrade && apt install golang-cfssl openvpn curl -y
+RUN apt update && apt upgrade && apt install golang-cfssl -y
 
-EXPOSE 443
 VOLUME /etc/common/
-VOLUME /etc/openvpn/server/pki
 
-WORKDIR /etc/openvpn/server
+WORKDIR /tmp
 COPY ./config .
 
 RUN chmod +x entrypoint.sh
