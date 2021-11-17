@@ -33,8 +33,6 @@ services:
     container_name: iot-tunnel-client-configurer
     build: ./client
     command: ./entrypoint.sh
-    env_file:
-      - .env.dev
     networks:
       - default
     depends_on:

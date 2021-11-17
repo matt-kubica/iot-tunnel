@@ -8,7 +8,7 @@ mv client.pem client.crt
 mv client-key.pem client.key
 
 cat base.conf \
-	<(echo -e "\nremote $OVPN_SERVER_IP 443\n") \
+	<(echo -e "\nremote $(curl -s ipinfo.io/ip) 443\n") \
     <(echo -e "<ca>") \
     ./ca.crt \
     <(echo -e "</ca>\n<cert>") \
