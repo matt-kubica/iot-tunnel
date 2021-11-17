@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "Generating client.ca and client.key..."
 cfssl gencert -remote=ca:8888 -profile=client client-csr.json | cfssljson -bare client
 
 cp /etc/common/ca.crt .
@@ -18,3 +19,5 @@ cat base.conf \
     <(echo -e "</key>\n<tls-crypt>") \
     ./ta.key \
     <(echo -e "</tls-crypt>") > /etc/common/client.conf
+
+echo "Client's config generated -> /etc/common/client.conf"

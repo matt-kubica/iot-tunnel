@@ -4,12 +4,14 @@
 # dir for pki `/etc/cfssl/ca/pki`
 # common dir `/etc/common`
 
-if [[ ! -f /etc/common/ca.crt ]] || [[ ! -f /etc/cfssl/ca/pki/ca.key ]] 
-then 
+if [[ ! -f /etc/common/ca.crt ]] || [[ ! -f /etc/cfssl/ca/pki/ca.key ]]
+then
 	echo "Missing ca.crt or ca.key, generating new ones..."
 	cfssl gencert -initca ca-csr.json | cfssljson -bare ca - && \
 	mv ca.pem /etc/common/ca.crt && \
 	mv ca-key.pem /etc/cfssl/ca/pki/ca.key
+else
+  echo "Reusing ca.cert and ca.key found on volume..."
 fi
 
 cfssl serve \

@@ -41,6 +41,20 @@ services:
     volumes:
       - common:/etc/common
 
+  test-service:
+    container_name: iot-tunnel-test-seervice
+    image: ubuntu:latest
+    command: sleep infinity
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - default
+    depends_on:
+      - ca
+      - ovpn-server
+    volumes:
+      - common:/etc/common
+
 
 networks:
   default:
