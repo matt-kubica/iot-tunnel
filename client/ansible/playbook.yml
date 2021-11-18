@@ -1,0 +1,52 @@
+---
+
+- hosts: clients
+  become: yes
+  tasks:
+
+  - name: Update packages
+    apt:
+      update_cache: yes
+  
+  - name: Upgrade packages
+    apt:
+      upgrade: yes
+  
+  - name: Install OpenVPN
+    apt:
+      pkg:
+      - openvpn
+      - openvpn-systemd-resolved
+
+  - name: Copy aws-key.pem to node
+    copy:
+      src: aws-key.pem
+      dest: /home/pi/aws-key.pem
+      mode: '400'
+
+  - name: Get client-config file from OpenVPN server
+    command: scp -o StrictHostKeyChecking=no -i /home/pi/aws-key.pem ubuntu@3.139.26.226:~/client-configs/files/client-2.ovpn /etc/openvpn/client.conf
+
+  - name: Configure OpenVPN to autostart
+    copy:
+      dest: /etc/default/openvpn
+      content: AUTOSTART="all"
+      owner: root  
+
+  - name: Start OpenVPN client service
+    systemd:
+      name: openvpn@client
+      state: started
+      enabled: yes 
+      daemon_reload: yes
+
+  - name: Reboot machine
+    reboot:
+
+  - name: Obtain ip address of vpn interface
+    command: ip --brief address show tun0
+    register: vpnip
+
+  - name: Log ip address
+    debug: 
+      msg: "{{ vpnip.stdout }}"

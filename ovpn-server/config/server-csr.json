@@ -1,0 +1,11 @@
+{
+    "CN": "ovpn-server",
+    "hosts": [
+        "example.net",
+        "www.example.net"
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    }
+}

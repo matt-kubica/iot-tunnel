@@ -1,0 +1,84 @@
+version: '3.3'
+
+
+services:
+
+  ca:
+    container_name: iot-tunnel-ca
+    build: ./ca
+    restart: on-failure
+    ports:
+      - 8888:8888
+    networks:
+      - default
+    volumes:
+      - common:/etc/common
+      - ca-pki:/etc/cfssl/ca/pki
+      - log:/var/log
+
+  ovpn-server:
+    container_name: iot-tunnel-ovpn-server
+    build: ./ovpn-server
+    restart: on-failure
+    ports:
+      - 443:443
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv4.conf.all.rp_filter=0
+    networks:
+      - default
+    depends_on:
+      - ca
+    volumes:
+      - common:/etc/common
+      - ovpn-pki:/etc/openvpn/server/pki
+      - log:/var/log
+
+  client-configurer:
+    container_name: iot-tunnel-client-configurer
+    build: ./client
+    command: ./entrypoint.sh
+    networks:
+      - default
+    depends_on:
+      - ca
+      - ovpn-server
+    volumes:
+      - common:/etc/common
+      - log:/var/log
+
+  test-service:
+    container_name: iot-tunnel-test-service
+    build: ./test-service
+    restart: on-failure
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - default
+    depends_on:
+      - ca
+      - ovpn-server
+    volumes:
+      - common:/etc/common
+      - log:/var/log
+
+
+networks:
+  default:
+    name: iot-tunnel-default-network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.0.0/24
+
+
+volumes:
+  common:
+    name: iot-tunnel-common-volume
+  ca-pki:
+    name: iot-tunnel-ca-pki-volume
+  ovpn-pki:
+    name: iot-tunnel-ovpn-pki-volume
+  log:
+    name: iot-tunnel-log-volume
