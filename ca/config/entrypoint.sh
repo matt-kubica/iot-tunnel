@@ -4,6 +4,12 @@
 # dir for pki `/etc/cfssl/ca/pki`
 # common dir `/etc/common`
 
+echo "Waiting for database to start..."
+while ! nc -z cert-store 5432; do
+  sleep 1
+done
+echo "Database accessible!"
+
 if [[ ! -f /etc/common/ca.crt ]] || [[ ! -f /etc/cfssl/ca/pki/ca.key ]]
 then
 	echo "Missing ca.crt or ca.key, generating new ones..."

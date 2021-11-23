@@ -5,8 +5,7 @@
 # common dir `/etc/common`
 
 echo "Waiting for CA to start..."
-until $(curl --output /dev/null --silent --fail http://ca:8888/api/v1/cfssl/scaninfo); do
-    printf '.'
+until curl --output /dev/null --silent --fail http://ca:8888/api/v1/cfssl/scaninfo; do
     sleep 1
 done
 echo "CA accessible!"
