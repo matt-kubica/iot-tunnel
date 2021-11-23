@@ -19,4 +19,5 @@ cfssl serve \
 	-port=8888 \
 	-ca=/etc/common/ca.crt \
 	-ca-key=/etc/cfssl/ca/pki/ca.key \
-	-config=ca-config.json
+	-config=ca-config.json \
+	-db-config=db-config.json

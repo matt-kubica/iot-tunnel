@@ -15,6 +15,25 @@ services:
       - common:/etc/common
       - ca-pki:/etc/cfssl/ca/pki
       - log:/var/log
+    depends_on:
+      - cert-store
+
+  cert-store:
+    container_name: iot-tunnel-cert-store
+    image: postgres:10
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: cert-store
+    networks:
+      - default
+    volumes:
+      - ./ca/config/init-cert-store.sql:/docker-entrypoint-initdb.d/init-cert-store.sql
+      - ca-cert-store:/var/lib/postgresql/data
+
 
   ovpn-server:
     container_name: iot-tunnel-ovpn-server
@@ -78,6 +97,8 @@ volumes:
     name: iot-tunnel-common-volume
   ca-pki:
     name: iot-tunnel-ca-pki-volume
+  ca-cert-store:
+    name: iot-tunnel-ca-cert-store
   ovpn-pki:
     name: iot-tunnel-ovpn-pki-volume
   log:
