@@ -29,7 +29,7 @@ else
   echo "Reusing ta.key found on volume..."
 fi;
 
-
+[ ! -f /etc/common/ccd ] && mkdir /etc/common/ccd
 [ ! -f /dev/net/tun ] && mkdir /dev/net && mknod /dev/net/tun c 10 200
 
 echo "Launching OpenVPN server..."

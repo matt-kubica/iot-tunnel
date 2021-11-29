@@ -54,10 +54,12 @@ services:
       - ovpn-pki:/etc/openvpn/server/pki
       - log:/var/log
 
-  client-configurer:
-    container_name: iot-tunnel-client-configurer
-    build: ./client
-    command: ./entrypoint.sh
+  management-service:
+    container_name: iot-tunnel-management-service
+    build: ./management-service
+    restart: on-failure
+    ports:
+      - 8080:8080
     networks:
       - default
     depends_on:
