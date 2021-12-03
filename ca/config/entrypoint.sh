@@ -5,7 +5,7 @@
 # common dir `/etc/common`
 
 echo "Waiting for database to start..."
-while ! nc -z cert-store 5432; do
+while ! nc -z database 5432; do
   sleep 1
 done
 echo "Database accessible!"

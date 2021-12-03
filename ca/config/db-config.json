@@ -1,4 +1,4 @@
 {
   "driver": "postgres",
-  "data_source": "postgres://admin:admin@cert-store/cert-store?sslmode=disable"
+  "data_source": "postgres://admin:admin@database/default?sslmode=disable"
 }
