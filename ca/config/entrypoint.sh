@@ -4,6 +4,12 @@
 # dir for pki `/etc/cfssl/ca/pki`
 # common dir `/etc/common`
 
+echo "Waiting for database to start..."
+while ! nc -z database 5432; do
+  sleep 1
+done
+echo "Database accessible!"
+
 if [[ ! -f /etc/common/ca.crt ]] || [[ ! -f /etc/cfssl/ca/pki/ca.key ]]
 then
 	echo "Missing ca.crt or ca.key, generating new ones..."
@@ -19,4 +25,5 @@ cfssl serve \
 	-port=8888 \
 	-ca=/etc/common/ca.crt \
 	-ca-key=/etc/cfssl/ca/pki/ca.key \
-	-config=ca-config.json
+	-config=ca-config.json \
+	-db-config=db-config.json

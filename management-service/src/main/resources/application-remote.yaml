@@ -1,0 +1,23 @@
+paths:
+  open-vpn:
+    client-config-directory: /etc/common/ccd
+    ta-key: /etc/common/ta.key
+  certificate-authority:
+    ca-cert: /etc/common/ca.crt
+
+endpoints:
+  certificate-authority:
+    new_cert: http://ca:8888/api/v1/cfssl/newcert
+
+defaults:
+  open-vpn:
+    external-address: 192.168.1.121
+    external-port: 443
+
+spring:
+  datasource:
+    url: jdbc:postgresql://database:5432/default
+    username: admin
+    password: admin
+  jpa:
+    generate-ddl: true

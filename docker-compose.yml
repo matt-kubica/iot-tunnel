@@ -15,6 +15,25 @@ services:
       - common:/etc/common
       - ca-pki:/etc/cfssl/ca/pki
       - log:/var/log
+    depends_on:
+      - database
+
+  database:
+    container_name: iot-tunnel-database
+    image: postgres:10
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: default
+    networks:
+      - default
+    volumes:
+      - ./ca/config/init-cert-store.sql:/docker-entrypoint-initdb.d/init-cert-store.sql
+      - default-database:/var/lib/postgresql/data
+
 
   ovpn-server:
     container_name: iot-tunnel-ovpn-server
@@ -35,10 +54,12 @@ services:
       - ovpn-pki:/etc/openvpn/server/pki
       - log:/var/log
 
-  client-configurer:
-    container_name: iot-tunnel-client-configurer
-    build: ./client
-    command: ./entrypoint.sh
+  management-service:
+    container_name: iot-tunnel-management-service
+    build: ./management-service
+    restart: on-failure
+    ports:
+      - 8080:8080
     networks:
       - default
     depends_on:
@@ -78,6 +99,8 @@ volumes:
     name: iot-tunnel-common-volume
   ca-pki:
     name: iot-tunnel-ca-pki-volume
+  default-database:
+    name: iot-tunnel-ca-default-database
   ovpn-pki:
     name: iot-tunnel-ovpn-pki-volume
   log:

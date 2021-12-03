@@ -1,7 +1,12 @@
 {
     "signing": {
         "default": {
-            "expiry": "43800h"
+            "expiry": "43800h",
+            "usages": [
+                "signing",
+                "key encipherment",
+                "cert sign"
+            ]
         },
         "profiles": {
             "server": {
@@ -17,15 +22,6 @@
                 "usages": [
                     "signing",
                     "key encipherment",
-                    "client auth"
-                ]
-            },
-            "peer": {
-                "expiry": "43800h",
-                "usages": [
-                    "signing",
-                    "key encipherment",
-                    "server auth",
                     "client auth"
                 ]
             }

@@ -1,5 +1,11 @@
 #!/bin/bash
 
+echo "Waiting for CA to start..."
+until curl --output /dev/null --silent --fail http://ca:8888/api/v1/cfssl/scaninfo; do
+    sleep 1
+done
+echo "CA accessible!"
+
 echo "Generating client.ca and client.key..."
 cfssl gencert -remote=ca:8888 -profile=client client-csr.json | cfssljson -bare client
 

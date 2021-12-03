@@ -5,8 +5,7 @@
 # common dir `/etc/common`
 
 echo "Waiting for CA to start..."
-until $(curl --output /dev/null --silent --fail http://ca:8888/api/v1/cfssl/scaninfo); do
-    printf '.'
+until curl --output /dev/null --silent --fail http://ca:8888/api/v1/cfssl/scaninfo; do
     sleep 1
 done
 echo "CA accessible!"
@@ -30,7 +29,7 @@ else
   echo "Reusing ta.key found on volume..."
 fi;
 
-
+[ ! -f /etc/common/ccd ] && mkdir /etc/common/ccd
 [ ! -f /dev/net/tun ] && mkdir /dev/net && mknod /dev/net/tun c 10 200
 
 echo "Launching OpenVPN server..."
