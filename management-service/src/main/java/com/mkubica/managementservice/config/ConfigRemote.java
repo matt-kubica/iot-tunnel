@@ -10,6 +10,7 @@ import com.mkubica.managementservice.service.cert.ClientCertificateRequester;
 import com.mkubica.managementservice.service.cert.DefaultClientCertificateRequester;
 import com.mkubica.managementservice.service.ip.IpAssigner;
 import com.mkubica.managementservice.service.ip.SharedVolumeIpAssigner;
+import com.mkubica.managementservice.util.HttpUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,11 +26,17 @@ public class ConfigRemote {
     }
 
     @Bean
+    public HttpUtil httpUtil() {
+        return new HttpUtil();
+    }
+
+    @Bean
     public ClientCertificateRequester clientCertificateRequester(
             @Value("${endpoints.certificate-authority.new-cert}") String newCertEndpoint,
-            TemplateProvider templateProvider
+            TemplateProvider templateProvider,
+            HttpUtil httpUtil
     ) {
-        return new DefaultClientCertificateRequester(newCertEndpoint, templateProvider);
+        return new DefaultClientCertificateRequester(newCertEndpoint, templateProvider, httpUtil);
     }
 
     @Bean

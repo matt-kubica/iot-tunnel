@@ -1,13 +1,15 @@
+/* Copyright 2021 Mateusz Kubica */
 package com.mkubica.managementservice.stub;
 
 import com.mkubica.managementservice.service.ip.IpAssigner;
+
 import io.vavr.control.Try;
 
 public class StubIpAssigner implements IpAssigner {
 
     @Override
-    public Try<Void> assignIp(String commonName, String ipAddress) {
-        return Try.success(null);
+    public Try<String> assignIp(String commonName, String ipAddress) {
+        return Try.success(ipAddress);
     }
 
     @Override

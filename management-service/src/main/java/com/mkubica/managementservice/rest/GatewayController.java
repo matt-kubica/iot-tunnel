@@ -4,9 +4,11 @@ package com.mkubica.managementservice.rest;
 import com.mkubica.managementservice.domain.dto.GatewayModel;
 import com.mkubica.managementservice.domain.dto.GatewaySimplifiedModel;
 import com.mkubica.managementservice.service.GatewayService;
+
+import org.springframework.web.bind.annotation.*;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -17,7 +19,9 @@ public class GatewayController {
 
     @GetMapping("/gateway/{common-name}")
     public GatewayModel get(@PathVariable("common-name") String commonName) {
-        return gatewayService.getGateway(commonName);
+        return gatewayService.getGateway(commonName)
+                .onFailure(exc -> log.error("Error getting gateway entity:\n" + exc))
+                .get();
     }
 
     //    @GetMapping("/gateway")
@@ -28,8 +32,10 @@ public class GatewayController {
     //    }
 
     @PostMapping("/gateway")
-    public void post(@RequestBody GatewaySimplifiedModel model) {
-        gatewayService.createGateway(model);
+    public GatewayModel post(@RequestBody GatewaySimplifiedModel model) {
+        return gatewayService.createGateway(model)
+                .onFailure(exc -> log.error("Error posting gateway entity:\n" + exc))
+                .get();
     }
 
     @DeleteMapping("/gateway/{common-name}")

@@ -2,16 +2,19 @@
 package com.mkubica.managementservice.repository;
 
 import com.mkubica.managementservice.domain.dao.GatewayEntity;
-import java.util.Optional;
+
 import javax.transaction.Transactional;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+
+import io.vavr.control.Option;
 
 @Repository
 @Transactional
 public interface GatewayRepository extends CrudRepository<GatewayEntity, String> {
 
-    Optional<GatewayEntity> getGatewayEntityByCommonName(String commonName);
-    Optional<GatewayEntity> getGatewayEntityByIpAddress(String ipAddress);
+    Option<GatewayEntity> getGatewayEntityByCommonName(String commonName);
+    Option<GatewayEntity> getGatewayEntityByIpAddress(String ipAddress);
     void deleteByCommonName(String commonName);
 }
