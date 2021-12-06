@@ -1,7 +1,8 @@
+/* Copyright 2021 Mateusz Kubica */
 package com.mkubica.managementservice.config;
 
-import com.mkubica.managementservice.provider.cert.CertificateProvider;
 import com.mkubica.managementservice.provider.TemplateProvider;
+import com.mkubica.managementservice.provider.cert.CertificateProvider;
 import com.mkubica.managementservice.repository.GatewayRepository;
 import com.mkubica.managementservice.service.GatewayConfigProducer;
 import com.mkubica.managementservice.service.GatewayService;
@@ -10,6 +11,7 @@ import com.mkubica.managementservice.service.ip.IpAssigner;
 import com.mkubica.managementservice.stub.StubCertificateProvider;
 import com.mkubica.managementservice.stub.StubClientCertificateRequester;
 import com.mkubica.managementservice.stub.StubIpAssigner;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

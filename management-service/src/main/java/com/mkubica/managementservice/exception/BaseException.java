@@ -1,3 +1,4 @@
+/* Copyright 2021 Mateusz Kubica */
 package com.mkubica.managementservice.exception;
 
 public class BaseException extends RuntimeException {

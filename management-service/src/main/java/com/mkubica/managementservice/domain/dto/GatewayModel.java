@@ -1,9 +1,11 @@
 /* Copyright 2021 Mateusz Kubica */
 package com.mkubica.managementservice.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonRootName;
 import com.mkubica.managementservice.domain.dao.GatewayEntity;
+
 import lombok.*;
+
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 @Data
 @ToString

@@ -1,3 +1,4 @@
+/* Copyright 2021 Mateusz Kubica */
 package com.mkubica.managementservice.config;
 
 import com.mkubica.managementservice.provider.TemplateProvider;
@@ -11,6 +12,7 @@ import com.mkubica.managementservice.service.cert.DefaultClientCertificateReques
 import com.mkubica.managementservice.service.ip.IpAssigner;
 import com.mkubica.managementservice.service.ip.SharedVolumeIpAssigner;
 import com.mkubica.managementservice.util.HttpUtil;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

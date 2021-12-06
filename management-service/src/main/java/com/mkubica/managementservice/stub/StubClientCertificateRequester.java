@@ -1,7 +1,9 @@
+/* Copyright 2021 Mateusz Kubica */
 package com.mkubica.managementservice.stub;
 
 import com.mkubica.managementservice.domain.dto.CertificateBundleModel;
 import com.mkubica.managementservice.service.cert.ClientCertificateRequester;
+
 import io.vavr.control.Try;
 
 public class StubClientCertificateRequester implements ClientCertificateRequester {

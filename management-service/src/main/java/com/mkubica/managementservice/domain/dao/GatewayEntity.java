@@ -2,7 +2,9 @@
 package com.mkubica.managementservice.domain.dao;
 
 import com.mkubica.managementservice.domain.dto.GatewayModel;
+
 import javax.persistence.*;
+
 import lombok.*;
 
 @Entity

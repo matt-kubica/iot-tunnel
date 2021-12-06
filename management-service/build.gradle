@@ -90,29 +90,25 @@ jacocoTestReport {
     }
 }
 
-// NOTE: spotless is disabled for now since none of a plugins
-// can format java files properly
-//spotless {
-//	format 'misc', {
-//		target '*.gradle', '*.md', '.gitignore'
-//
-//		trimTrailingWhitespace()
-//		indentWithTabs()
-//		endWithNewline()
-//	}
-//
-//	java {
-//		importOrder('com.mkubica', 'java', 'javax', 'org.springframework', 'lombok', '')
-//
-//		prettier([
-//				'prettier': '2.0.5',
-//				'prettier-plugin-java': '0.8.0'
-//		]).config([
-//				'parser': 'java',
-//				'tabWidth': 4,
-//				'printWidth': 120
-//		])
-//
-//		licenseHeader '/* Copyright $YEAR Mateusz Kubica */'
-//	}
-//}
+
+
+spotless {
+    format 'misc', {
+        target '*.gradle', '*.md', '.gitignore'
+
+        trimTrailingWhitespace()
+        indentWithSpaces(4)
+        endWithNewline()
+    }
+
+    java {
+        importOrder('com.mkubica', 'java', 'javax', 'org.springframework', 'lombok', '')
+
+        trimTrailingWhitespace()
+        removeUnusedImports()
+        indentWithSpaces(4)
+        endWithNewline()
+
+        licenseHeader '/* Copyright $YEAR Mateusz Kubica */'
+    }
+}

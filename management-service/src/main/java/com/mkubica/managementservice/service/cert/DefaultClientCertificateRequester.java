@@ -3,8 +3,8 @@ package com.mkubica.managementservice.service.cert;
 
 import com.mkubica.managementservice.domain.dto.CertificateBundleModel;
 import com.mkubica.managementservice.provider.TemplateProvider;
-
 import com.mkubica.managementservice.util.HttpUtil;
+
 import lombok.AllArgsConstructor;
 
 import io.vavr.control.Try;

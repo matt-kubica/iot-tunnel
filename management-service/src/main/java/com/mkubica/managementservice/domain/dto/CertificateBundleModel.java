@@ -1,8 +1,9 @@
 /* Copyright 2021 Mateusz Kubica */
 package com.mkubica.managementservice.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.*;
+
+import com.fasterxml.jackson.annotation.JsonRootName;
 
 @Data
 @ToString

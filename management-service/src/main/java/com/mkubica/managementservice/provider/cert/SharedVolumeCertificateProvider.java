@@ -4,8 +4,9 @@ package com.mkubica.managementservice.provider.cert;
 import java.io.*;
 import java.util.stream.Collectors;
 
-import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
+
+import io.vavr.control.Try;
 
 @AllArgsConstructor
 public class SharedVolumeCertificateProvider implements CertificateProvider {
