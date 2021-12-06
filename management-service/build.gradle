@@ -1,9 +1,11 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.0'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
-	id 'groovy'
-	id 'com.diffplug.spotless' version '5.15.1'
+    id 'org.springframework.boot' version '2.6.0'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'groovy'
+    id 'com.diffplug.spotless' version '5.15.1'
+    id 'idea'
+    id 'jacoco'
 }
 
 group = 'com.mkubica'
@@ -11,35 +13,81 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.json:json:20210307'
-	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
-	implementation 'com.github.ben-manes.caffeine:caffeine:3.0.4'
-	implementation 'org.postgresql:postgresql:42.3.1'
-	implementation 'com.h2database:h2:1.4.200'
-	implementation 'io.vavr:vavr:0.10.4'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.json:json:20210307'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.0.4'
+    implementation 'org.postgresql:postgresql:42.3.1'
+    implementation 'com.h2database:h2:1.4.200'
+    implementation 'io.vavr:vavr:0.10.4'
 
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
-	testImplementation 'org.codehaus.groovy:groovy-all:3.0.8'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.8'
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
+    testLogging {
+        events 'FAILED', 'SKIPPED'
+    }
+
+     finalizedBy jacocoTestReport
+}
+
+apply from: 'gradle/integration-test.gradle'
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+
+    group = 'verification'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+
+    testLogging {
+        events 'FAILED', 'SKIPPED'
+    }
+
+     finalizedBy jacocoTestReport
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+jacocoTestReport {
+    dependsOn test, integrationTest
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacoco')
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    'com/mkubica/managementservice/config',
+                    'com/mkubica/managementservice/domain',
+                    'com/mkubica/managementservice/stub',
+                    'com/mkubica/managementservice/util',
+                    'com/mkubica/managementservice/exception',
+                    'com/mkubica/managementservice/ManagementServiceApplication.java',
+            ])
+        }))
+    }
 }
 
 // NOTE: spotless is disabled for now since none of a plugins
