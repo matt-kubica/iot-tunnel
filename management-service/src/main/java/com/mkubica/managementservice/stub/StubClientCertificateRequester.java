@@ -7,7 +7,7 @@ import io.vavr.control.Try;
 public class StubClientCertificateRequester implements ClientCertificateRequester {
 
     @Override
-    public Try<CertificateBundleModel> requestCertificate(String commonName) {
+    public Try<CertificateBundleModel> requestBundle(String commonName) {
         return Try.of(() -> CertificateBundleModel.builder()
                 .withCertificate("some-certificate")
                 .withPrivateKey("some-private-key")

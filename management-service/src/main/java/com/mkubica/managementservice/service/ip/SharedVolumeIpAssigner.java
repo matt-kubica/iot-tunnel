@@ -2,13 +2,14 @@
 package com.mkubica.managementservice.service.ip;
 
 import com.mkubica.managementservice.repository.GatewayRepository;
+
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 
-import io.vavr.control.Try;
 import lombok.AllArgsConstructor;
+
+import io.vavr.control.Try;
 
 
 @AllArgsConstructor
@@ -17,14 +18,15 @@ public class SharedVolumeIpAssigner implements IpAssigner {
     private final String ccdPath;
     private final GatewayRepository gatewayRepository;
 
-    public Try<Void> assignIp(String commonName, String ipAddress) {
+    public Try<String> assignIp(String commonName, String ipAddress) {
         File file = new File(ccdPath, commonName);
         return Try.of(() -> {
+            // TODO: Probably use another exception
             if (!file.createNewFile()) throw new RuntimeException("Common name already allocated!");
             FileWriter fw = new FileWriter(file);
             fw.write("ifconfig-push " + ipAddress + "\n");
             fw.close();
-            return null;
+            return ipAddress;
         });
     }
 

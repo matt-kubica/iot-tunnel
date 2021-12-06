@@ -4,41 +4,36 @@ package com.mkubica.managementservice.service.cert;
 import com.mkubica.managementservice.domain.dto.CertificateBundleModel;
 import com.mkubica.managementservice.provider.TemplateProvider;
 
-import io.vavr.control.Try;
+import com.mkubica.managementservice.util.HttpUtil;
 import lombok.AllArgsConstructor;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.HttpClientBuilder;
+
+import io.vavr.control.Try;
 import org.json.JSONObject;
+
 
 @AllArgsConstructor
 public class DefaultClientCertificateRequester implements ClientCertificateRequester {
 
     private final String newCertEndpoint;
     private final TemplateProvider templateProvider;
+    private final HttpUtil httpUtil;
 
-    public Try<CertificateBundleModel> requestCertificate(String commonName) {
-        StringEntity entity = new StringEntity(prepareBody(commonName), ContentType.APPLICATION_JSON);
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpPost request = new HttpPost(newCertEndpoint);
-        request.setEntity(entity);
+    public Try<CertificateBundleModel> requestBundle(String commonName) {
 
-        return Try.of(() -> client.execute(request, new BasicResponseHandler()))
-                .map((response) -> CertificateBundleModel.builder()
+        return prepareBody(commonName)
+                .map(body -> httpUtil.post(newCertEndpoint, body).get())
+                .map(response -> CertificateBundleModel.builder()
                         .withCertificate(extractCertificate(response))
                         .withPrivateKey(extractPrivateKey(response))
                         .build()
                 );
     }
 
-    private String prepareBody(String commonName) {
-        String template = templateProvider.obtainTemplate("static/client-csr.json");
-        JSONObject jo = new JSONObject(template);
-        jo.getJSONObject("request").put("CN", commonName);
-        return jo.toString();
+    private Try<String> prepareBody(String commonName) {
+        return templateProvider.obtainTemplate("static/client-csr.json")
+                .map(JSONObject::new)
+                .map(jo -> jo.getJSONObject("request").put("CN", commonName))
+                .map(JSONObject::toString);
     }
 
     private static String extractCertificate(String response) {
