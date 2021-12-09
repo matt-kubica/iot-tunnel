@@ -11,6 +11,7 @@ import com.mkubica.managementservice.service.cert.ClientCertificateRequester;
 import com.mkubica.managementservice.service.cert.DefaultClientCertificateRequester;
 import com.mkubica.managementservice.service.ip.IpAssigner;
 import com.mkubica.managementservice.service.ip.SharedVolumeIpAssigner;
+import com.mkubica.managementservice.transaction.TransactionChainExecutor;
 import com.mkubica.managementservice.util.HttpUtil;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -72,8 +73,20 @@ public class ConfigRemote {
             GatewayConfigProducer gatewayConfigProducer,
             GatewayRepository gatewayRepository,
             ClientCertificateRequester clientCertificateRequester,
-            IpAssigner ipAssigner
+            IpAssigner ipAssigner,
+            TransactionChainExecutor transactionChainExecutor
     ) {
-        return new GatewayService(gatewayConfigProducer, gatewayRepository, clientCertificateRequester, ipAssigner);
+        return new GatewayService(
+                gatewayConfigProducer,
+                gatewayRepository,
+                clientCertificateRequester,
+                ipAssigner,
+                transactionChainExecutor
+        );
+    }
+
+    @Bean
+    public TransactionChainExecutor chainExecutor() {
+        return new TransactionChainExecutor();
     }
 }

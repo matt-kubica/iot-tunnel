@@ -12,6 +12,7 @@ import com.mkubica.managementservice.stub.StubCertificateProvider;
 import com.mkubica.managementservice.stub.StubClientCertificateRequester;
 import com.mkubica.managementservice.stub.StubIpAssigner;
 
+import com.mkubica.managementservice.transaction.TransactionChainExecutor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,8 +57,20 @@ public class ConfigLocal {
             GatewayConfigProducer gatewayConfigProducer,
             GatewayRepository gatewayRepository,
             ClientCertificateRequester clientCertificateRequester,
-            IpAssigner ipAssigner
+            IpAssigner ipAssigner,
+            TransactionChainExecutor transactionChainExecutor
     ) {
-        return new GatewayService(gatewayConfigProducer, gatewayRepository, clientCertificateRequester, ipAssigner);
+        return new GatewayService(
+                gatewayConfigProducer,
+                gatewayRepository,
+                clientCertificateRequester,
+                ipAssigner,
+                transactionChainExecutor
+        );
+    }
+
+    @Bean
+    public TransactionChainExecutor chainExecutor() {
+        return new TransactionChainExecutor();
     }
 }

@@ -29,6 +29,11 @@ public class DefaultClientCertificateRequester implements ClientCertificateReque
                 );
     }
 
+    public Try<Void> revokeBundle(String commonName) {
+        // TODO: for now
+        return Try.success(null);
+    }
+
     private Try<String> prepareBody(String commonName) {
         return templateProvider.obtainTemplate("static/client-csr.json")
                 .map(JSONObject::new)

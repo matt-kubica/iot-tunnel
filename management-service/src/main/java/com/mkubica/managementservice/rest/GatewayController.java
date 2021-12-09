@@ -34,7 +34,8 @@ public class GatewayController {
     @PostMapping("/gateway")
     public GatewayModel post(@RequestBody GatewaySimplifiedModel model) {
         return gatewayService.createGateway(model)
-                .onFailure(exc -> log.error("Error posting gateway entity:\n" + exc))
+                .onFailure(exc -> log.error("Error posting gateway entity: {}", exc.toString()))
+                .onSuccess(val -> log.debug("Successfully posted entity: {}", val))
                 .get();
     }
 
