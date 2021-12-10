@@ -5,6 +5,7 @@ import com.mkubica.managementservice.provider.TemplateProvider
 import com.mkubica.managementservice.util.HttpUtil
 import io.vavr.control.Try
 import org.json.JSONException
+import org.json.JSONObject
 import spock.lang.Specification
 
 class DefaultClientCertificateRequesterSpec extends Specification {
@@ -79,6 +80,22 @@ class DefaultClientCertificateRequesterSpec extends Specification {
         then:
             res.isFailure()
             res.getCause() instanceof JSONException
+    }
+
+    def "correct request body is passed to HttpUtil::post method"() {
+        given:
+            templateProvider.obtainTemplate(_ as String) >> Try.success(CSR_TEMPLATE)
+            def mock = Mock(HttpUtil)
+            def requester = new DefaultClientCertificateRequester(_ as String, templateProvider, mock)
+
+
+        when:
+            requester.requestBundle(_ as String)
+
+        then:
+            1 * mock.post(_, { it ->
+                new JSONObject(it as String).remove("CN") == new JSONObject(CSR_TEMPLATE).remove("CN")
+            })
     }
 
     private static final CertificateBundleModel CERT_BUNDLE_RESPONSE = CertificateBundleModel.builder()

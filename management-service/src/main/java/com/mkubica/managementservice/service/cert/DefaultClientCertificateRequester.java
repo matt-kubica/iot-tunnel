@@ -32,7 +32,9 @@ public class DefaultClientCertificateRequester implements ClientCertificateReque
     private Try<String> prepareBody(String commonName) {
         return templateProvider.obtainTemplate("static/client-csr.json")
                 .map(JSONObject::new)
-                .map(jo -> jo.getJSONObject("request").put("CN", commonName))
+                .map(jo -> jo.getJSONObject("request"))
+                .map(jo -> jo.put("CN", commonName))
+                .map(jo -> new JSONObject().put("request", jo))
                 .map(JSONObject::toString);
     }
 
