@@ -1,5 +1,6 @@
 defaults:
   open-vpn:
+    internal-address-pool: 10.8.0.0/24
     external-address: 127.0.0.1
     external-port: 443
 

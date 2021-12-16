@@ -8,6 +8,6 @@ import io.vavr.control.Try;
 
 public interface ClientCertificateRequester {
 
-    // TODO: consider using vavr.Future
     Try<CertificateBundleModel> requestBundle(String commonName);
+    Try<Void> revokeBundle(String commonName);
 }

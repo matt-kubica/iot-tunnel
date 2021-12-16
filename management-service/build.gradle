@@ -31,6 +31,8 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.3.1'
     implementation 'com.h2database:h2:1.4.200'
     implementation 'io.vavr:vavr:0.10.4'
+    implementation 'com.github.seancfoley:ipaddress:5.3.3'
+    implementation 'com.google.guava:guava:31.0.1-jre'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -38,6 +40,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
     testImplementation 'org.codehaus.groovy:groovy-all:3.0.8'
+}
+
+compileJava {
+    options.compilerArgs << '-Xlint:unchecked'
 }
 
 test {
@@ -92,23 +98,23 @@ jacocoTestReport {
 
 
 
-spotless {
-    format 'misc', {
-        target '*.gradle', '*.md', '.gitignore'
-
-        trimTrailingWhitespace()
-        indentWithSpaces(4)
-        endWithNewline()
-    }
-
-    java {
-        importOrder('com.mkubica', 'java', 'javax', 'org.springframework', 'lombok', '')
-
-        trimTrailingWhitespace()
-        removeUnusedImports()
-        indentWithSpaces(4)
-        endWithNewline()
-
-        licenseHeader '/* Copyright $YEAR Mateusz Kubica */'
-    }
-}
+//spotless {
+//    format 'misc', {
+//        target '*.gradle', '*.md', '.gitignore'
+//
+//        trimTrailingWhitespace()
+//        indentWithSpaces(4)
+//        endWithNewline()
+//    }
+//
+//    java {
+//        importOrder('com.mkubica', 'java', 'javax', 'org.springframework', 'lombok', '')
+//
+//        trimTrailingWhitespace()
+//        removeUnusedImports()
+//        indentWithSpaces(4)
+//        endWithNewline()
+//
+//        licenseHeader '/* Copyright $YEAR Mateusz Kubica */'
+//    }
+//}
