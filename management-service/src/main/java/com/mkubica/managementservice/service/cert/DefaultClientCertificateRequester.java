@@ -18,8 +18,8 @@ public class DefaultClientCertificateRequester implements ClientCertificateReque
     private final TemplateProvider templateProvider;
     private final HttpUtil httpUtil;
 
+    @Override
     public Try<CertificateBundleModel> requestBundle(String commonName) {
-
         return prepareBody(commonName)
                 .map(body -> httpUtil.post(newCertEndpoint, body).get())
                 .map(response -> CertificateBundleModel.builder()
@@ -27,6 +27,12 @@ public class DefaultClientCertificateRequester implements ClientCertificateReque
                         .withPrivateKey(extractPrivateKey(response))
                         .build()
                 );
+    }
+
+    @Override
+    // TODO: to implement....
+    public Try<Void> revokeBundle(String commonName) {
+        return Try.success(null);
     }
 
     private Try<String> prepareBody(String commonName) {

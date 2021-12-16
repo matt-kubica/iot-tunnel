@@ -16,4 +16,9 @@ public class StubClientCertificateRequester implements ClientCertificateRequeste
                 .build()
         );
     }
+
+    @Override
+    public Try<Void> revokeBundle(String commonName) {
+        return Try.success(null);
+    }
 }

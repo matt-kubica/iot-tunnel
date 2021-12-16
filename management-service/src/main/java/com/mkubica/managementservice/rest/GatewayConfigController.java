@@ -2,6 +2,7 @@
 package com.mkubica.managementservice.rest;
 
 import com.mkubica.managementservice.domain.dto.GatewayConfigModel;
+import com.mkubica.managementservice.domain.dto.GatewayModel;
 import com.mkubica.managementservice.service.GatewayService;
 
 import java.io.ByteArrayInputStream;
@@ -25,7 +26,7 @@ public class GatewayConfigController {
 
     @GetMapping("/gateway-config/{common-name}")
     public void get(@PathVariable("common-name") String commonName, HttpServletResponse response) {
-        gatewayService.getGatewayConfig(commonName)
+        gatewayService.getGatewayConfig(GatewayModel.builder().withCommonName(commonName).build())
                 .map(GatewayConfigModel::makeString)
                 .map(config -> new ByteArrayInputStream(config.getBytes()))
                 .andThenTry(config -> {
@@ -33,7 +34,7 @@ public class GatewayConfigController {
                     response.setContentType("application/file");
                     response.flushBuffer();
                 })
-                .onFailure(exc -> log.error("Error obtaining config:\n" + exc.getMessage()))
-                .onSuccess(val -> log.info("Config successfully downloaded!"));
+                .onFailure(exc -> log.error("Error when getting config for common-name:{}", commonName))
+                .onSuccess(res -> log.debug("Successfully obtained config for common-name: {}", commonName));
     }
 }
