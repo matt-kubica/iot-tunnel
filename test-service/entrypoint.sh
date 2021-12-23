@@ -1,7 +1,7 @@
 #!/bin/bash
 
-OVPN_IP=$(dig +short iot-tunnel-ovpn-server)
+OVPN_SERVER_INTERNAL_IP=$(dig +short iot-tunnel-ovpn-server)
 
-ip route add 10.8.0.0/24 via $OVPN_IP dev eth0
+ip route add "$OVPN_INTERNAL_NETWORK_ADDRESS"/"$OVPN_INTERNAL_NETWORK_MASK" via "$OVPN_SERVER_INTERNAL_IP" dev eth0
 
 sleep infinity

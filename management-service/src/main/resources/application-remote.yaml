@@ -11,9 +11,10 @@ endpoints:
 
 defaults:
   open-vpn:
-    internal-address-pool: 10.8.0.0/24
-    external-address: 192.168.1.121
-    external-port: 443
+    internal-network-address: ${OVPN_INTERNAL_NETWORK_ADDRESS}
+    internal-network-mask: ${OVPN_INTERNAL_NETWORK_MASK}
+    external-address: ${OVPN_EXTERNAL_IP_ADDRESS}
+    external-port: ${OVPN_EXTERNAL_PORT}
 
 spring:
   datasource:

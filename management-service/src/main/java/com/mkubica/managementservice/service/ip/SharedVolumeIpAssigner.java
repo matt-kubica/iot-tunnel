@@ -40,12 +40,21 @@ public class SharedVolumeIpAssigner implements IpAssigner {
 
 
     // TODO: add some validation, here or on bean creation - to validate ccd path and internal address pool
-    public SharedVolumeIpAssigner(String ccdPath, GatewayRepository gatewayRepository, String internalAddressPool) {
+    public SharedVolumeIpAssigner(
+            String ccdPath,
+            GatewayRepository gatewayRepository,
+            String internalNetworkAddress,
+            String internalNetworkMask
+    ) {
         this.ccdPath = ccdPath;
         this.gatewayRepository = gatewayRepository;
 
         // NOTE: when creating pool, omit first pair since it is allocated for vpn server
-        this.ipPairsPool = StatefulSortedSet.of(() -> IpAssigner.getAllPairsFromCidr(internalAddressPool).get().drop(1));
+        this.ipPairsPool = StatefulSortedSet.of(() -> IpAssigner
+                .getAllPairsFromAddressAndMask(internalNetworkAddress, internalNetworkMask)
+                .get()
+                .drop(1)
+        );
         this.allocatedIpPairs = StatefulSortedSet.of(this::getAllAllocatedPairs);
     }
 

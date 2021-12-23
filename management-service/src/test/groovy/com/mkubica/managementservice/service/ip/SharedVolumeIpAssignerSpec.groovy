@@ -19,7 +19,8 @@ import static java.lang.String.format
 class SharedVolumeIpAssignerSpec extends Specification {
 
     private final GatewayRepository gatewayRepository = Stub()
-    private final String internalAddressPool = "10.8.0.0/24"
+    private final String internalNetworkAddress = "10.8.0.0"
+    private final String internalNetworkMask = "255.255.255.0"
     private static File ccDirectory
     private IpAssigner ipAssigner
 
@@ -27,7 +28,7 @@ class SharedVolumeIpAssignerSpec extends Specification {
     def setup() {
         // NOTE: every time new unit test is executed, new temp dir needs to be created
         ccDirectory = File.createTempDir("ccd-")
-        ipAssigner = new SharedVolumeIpAssigner(ccDirectory.toString(), gatewayRepository, internalAddressPool)
+        ipAssigner = new SharedVolumeIpAssigner(ccDirectory.toString(), gatewayRepository, internalNetworkAddress, internalNetworkMask)
     }
 
     def "assign ip explicitly"() {
@@ -233,7 +234,7 @@ class SharedVolumeIpAssignerSpec extends Specification {
             )
 
         expect: "creation of ip assigner to succeed"
-            def assigner = new SharedVolumeIpAssigner(ccDirectory.toString(), repository, "10.8.0.0/24")
+            def assigner = new SharedVolumeIpAssigner(ccDirectory.toString(), repository, "10.8.0.0", "255.255.255.0")
         and: "cache to not contain corrupted ip"
             assigner.allocatedIpPairs.all() == TreeSet.of(
                     IpAssigner.seqRangeFromString("10.8.0.14").get(),

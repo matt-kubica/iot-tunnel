@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 LABEL maintainer="Mateusz Kubica <mateusz.kubica99@gmail.com>"
 
-RUN apt update && apt upgrade && apt install golang-cfssl openvpn curl -y
+RUN apt update && apt upgrade -y && apt install golang-cfssl openvpn curl iptables gettext-base -y
 
 EXPOSE 443
 VOLUME /etc/common

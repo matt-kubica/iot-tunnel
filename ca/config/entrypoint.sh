@@ -20,10 +20,12 @@ else
   echo "Reusing ca.cert and ca.key found on volume..."
 fi
 
+cat db-config.json | envsubst > substituted-db-config.json
+
 cfssl serve \
 	-address=0.0.0.0 \
 	-port=8888 \
 	-ca=/etc/common/ca.crt \
 	-ca-key=/etc/cfssl/ca/pki/ca.key \
 	-config=ca-config.json \
-	-db-config=db-config.json
+	-db-config=substituted-db-config.json

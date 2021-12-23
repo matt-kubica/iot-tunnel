@@ -1,15 +1,7 @@
 {
-    "CN": "My Own CA",
+    "CN": "iot-tunnel-internal-ca",
     "key": {
         "algo": "rsa",
         "size": 2048
-    },
-    "names": [
-        {
-            "C": "US",
-            "ST": "CA",
-            "L": "San Francisco",
-            "O": "My company name"
-        }
-    ]
+    }
 }

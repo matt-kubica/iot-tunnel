@@ -11,6 +11,8 @@ import org.springframework.lang.Nullable;
 
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
+
 
 /**
  * Interface whose implementations should somehow communicate
@@ -71,6 +73,22 @@ public interface IpAssigner {
      */
     static Try<TreeSet<IPAddressSeqRange>> getAllPairsFromCidr(String cidr) {
         return Try.of(() -> new IPAddressString(cidr).toAddress())
+                .map(network -> network.setPrefixLength(31, false).prefixBlockStream())
+                .map(stream -> stream.map(IPAddress::toSequentialRange))
+                .map(TreeSet::ofAll);
+
+    }
+
+    /**
+     * Static method which converts address and mask pair to {@link TreeSet}
+     * of {@link IPAddressSeqRange} with 31 prefix length.
+     *
+     * @param address - valid network address, eg. 10.8.0.0
+     * @param mask - valid network mask, eg. 255.255.0.0
+     * @return {@link TreeSet<IPAddressSeqRange>} or exception, wrapped with {@link Try}
+     */
+    static Try<TreeSet<IPAddressSeqRange>> getAllPairsFromAddressAndMask(String address, String mask) {
+        return Try.of(() -> new IPAddressString(format("%s/%s", address, mask)).toAddress())
                 .map(network -> network.setPrefixLength(31, false).prefixBlockStream())
                 .map(stream -> stream.map(IPAddress::toSequentialRange))
                 .map(TreeSet::ofAll);
