@@ -52,10 +52,16 @@ public class ConfigRemote {
     @Bean
     public IpAssigner ipAssigner(
             @Value("${paths.open-vpn.client-config-directory}") String ccdPath,
-            @Value("${defaults.open-vpn.internal-address-pool}") String internalAddressPool,
+            @Value("${defaults.open-vpn.internal-network-address}") String internalNetworkAddress,
+            @Value("${defaults.open-vpn.internal-network-mask}") String internalNetworkMask,
             GatewayRepository gatewayRepository
     ) {
-        return new SharedVolumeIpAssigner(ccdPath, gatewayRepository, internalAddressPool);
+        return new SharedVolumeIpAssigner(
+                ccdPath,
+                gatewayRepository,
+                internalNetworkAddress,
+                internalNetworkMask
+        );
     }
 
     @Bean

@@ -29,8 +29,12 @@ else
   echo "Reusing ta.key found on volume..."
 fi;
 
-[ ! -f /etc/common/ccd ] && mkdir /etc/common/ccd
+iptables -A FORWARD -d "$SERVER_END_NETWORK_CIDR" -m state --state NEW -j REJECT
+
+[ ! -d /etc/common/ccd ] && mkdir /etc/common/ccd
 [ ! -f /dev/net/tun ] && mkdir /dev/net && mknod /dev/net/tun c 10 200
 
+cat server.conf | envsubst > substituted.conf
+
 echo "Launching OpenVPN server..."
-openvpn --config server.conf
+openvpn --config substituted.conf

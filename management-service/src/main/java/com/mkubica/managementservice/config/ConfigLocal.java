@@ -45,11 +45,17 @@ public class ConfigLocal {
     @SneakyThrows
     public IpAssigner ipAssigner(
             GatewayRepository gatewayRepository,
-            @Value("${defaults.open-vpn.internal-address-pool}") String internalAddressPool
+            @Value("${defaults.open-vpn.internal-network-address}") String internalNetworkAddress,
+            @Value("${defaults.open-vpn.internal-network-mask}") String internalNetworkMask
     ) {
         var tempCcd = Files.createTempDirectory("ccd");
         log.info("Created temp ccd here: {}", tempCcd.toAbsolutePath());
-        return new SharedVolumeIpAssigner(tempCcd.toAbsolutePath().toString(), gatewayRepository, internalAddressPool);
+        return new SharedVolumeIpAssigner(
+                tempCcd.toAbsolutePath().toString(),
+                gatewayRepository,
+                internalNetworkAddress,
+                internalNetworkMask
+        );
     }
 
     @Bean

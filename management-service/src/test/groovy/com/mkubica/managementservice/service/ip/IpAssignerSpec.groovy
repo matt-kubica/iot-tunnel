@@ -9,11 +9,12 @@ import spock.lang.Specification
 
 import java.util.stream.Collectors
 
+import static java.lang.String.format
 
 
 class IpAssignerSpec extends Specification {
 
-    def "get all ip pairs from string"() {
+    def "get all ip pairs from cidr string"() {
         given:
             def internalAddressPool = "10.8.0.0/24"
             def initialPoolSize = new IPAddressString(internalAddressPool).toAddress()
@@ -28,12 +29,41 @@ class IpAssignerSpec extends Specification {
             res.get().each { it.count as int == 2 }
     }
 
-    def "try to get all ip pairs from invalid internalAddressPool string"() {
+    def "try to get all ip pairs from invalid cidr string"() {
         given:
             def internalAddressPool = "10.8.268.0/24"
 
         when:
             def res = IpAssigner.getAllPairsFromCidr(internalAddressPool)
+
+        then:
+            res.isFailure()
+            res.getCause() instanceof AddressStringException
+    }
+
+    def "get all ip pairs from network address and mask strings"() {
+        given:
+            def internalNetworkAddress = "10.8.0.0"
+            def internalNetworkMask = "255.255.255.0"
+            def initialPoolSize = new IPAddressString(format("%s/%s", internalNetworkAddress, internalNetworkMask)).toAddress()
+                .stream().collect(Collectors.toList()).size()
+
+        when:
+            def res = IpAssigner.getAllPairsFromAddressAndMask(internalNetworkAddress, internalNetworkMask)
+
+        then:
+            res.isSuccess()
+            res.get().size() == (initialPoolSize / 2) as int
+            res.get().each { it.count as int == 2 }
+    }
+
+    def "get all ip pairs from invalid network address and mask strings"() {
+        given:
+            def internalNetworkAddress = "10.8.312.0"
+            def internalNetworkMask = "255.243"
+
+        when:
+            def res = IpAssigner.getAllPairsFromAddressAndMask(internalNetworkAddress, internalNetworkMask)
 
         then:
             res.isFailure()

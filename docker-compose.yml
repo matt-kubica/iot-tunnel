@@ -17,6 +17,8 @@ services:
       - log:/var/log
     depends_on:
       - database
+    env_file:
+      - .env
 
   database:
     container_name: iot-tunnel-database
@@ -24,16 +26,13 @@ services:
     restart: always
     ports:
       - 5432:5432
-    environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: default
     networks:
       - default
     volumes:
       - ./ca/config/init-cert-store.sql:/docker-entrypoint-initdb.d/init-cert-store.sql
       - default-database:/var/lib/postgresql/data
-
+    env_file:
+      - .env
 
   ovpn-server:
     container_name: iot-tunnel-ovpn-server
@@ -53,6 +52,8 @@ services:
       - common:/etc/common
       - ovpn-pki:/etc/openvpn/server/pki
       - log:/var/log
+    env_file:
+      - .env
 
   management-service:
     container_name: iot-tunnel-management-service
@@ -68,6 +69,8 @@ services:
     volumes:
       - common:/etc/common
       - log:/var/log
+    env_file:
+      - .env
 
   test-service:
     container_name: iot-tunnel-test-service
@@ -83,6 +86,8 @@ services:
     volumes:
       - common:/etc/common
       - log:/var/log
+    env_file:
+      - .env
 
 
 networks:
@@ -91,7 +96,7 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.16.0.0/24
+        - subnet: $SERVER_END_NETWORK_CIDR
 
 
 volumes:

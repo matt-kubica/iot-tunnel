@@ -2,7 +2,7 @@ FROM ubuntu:latest
 
 LABEL maintainer="Mateusz Kubica <mateusz.kubica99@gmail.com>"
 
-RUN apt update && apt upgrade && apt install iputils-ping iproute2 dnsutils iptables -y
+RUN apt update && apt upgrade -y && apt install iputils-ping iproute2 dnsutils iptables net-tools -y
 
 VOLUME /etc/common
 VOLUME /var/log
