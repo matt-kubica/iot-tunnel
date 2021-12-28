@@ -61,7 +61,7 @@ public class SharedVolumeIpAssigner implements IpAssigner {
 
     @Override
     @NonNull
-    public Try<String> assignIp(@NonNull String commonName, @Nullable String ipAddressString) {
+    public synchronized Try<String> assignIp(@NonNull String commonName, @Nullable String ipAddressString) {
         Try<IPAddressSeqRange> chosenIpPair = ipAddressString == null
                 ? chooseIpPair()
                 : Try.success(ipAddressString)
@@ -73,7 +73,7 @@ public class SharedVolumeIpAssigner implements IpAssigner {
 
     @Override
     @NonNull
-    public Try<String> revokeIp(@NonNull String commonName) {
+    public synchronized Try<String> revokeIp(@NonNull String commonName) {
         return deleteIpConfigFile(commonName)
                 .map(ipAddress -> ipAddress.setPrefixLength(31).toSequentialRange())
                 .map(seqRange -> allocatedIpPairs.remove(seqRange).getLower().toCanonicalString());
