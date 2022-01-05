@@ -2,6 +2,7 @@
 package com.mkubica.managementservice.rest;
 
 import com.mkubica.managementservice.domain.dto.GatewayModel;
+import com.mkubica.managementservice.repository.GatewayRepository;
 import com.mkubica.managementservice.service.GatewayService;
 
 import org.springframework.web.bind.annotation.*;
@@ -9,12 +10,22 @@ import org.springframework.web.bind.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+
 @RestController
 @AllArgsConstructor
 @Slf4j
 public class GatewayController {
 
     private final GatewayService gatewayService;
+    private final GatewayRepository gatewayRepository;
+
+    @GetMapping("/gateway")
+    public List<GatewayModel> get() {
+        return gatewayRepository.findAll().stream().map(GatewayModel::from).collect(Collectors.toList());
+    }
 
     @GetMapping("/gateway/{common-name}")
     public GatewayModel get(@PathVariable("common-name") String commonName) {
