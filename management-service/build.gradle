@@ -25,6 +25,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.json:json:20210307'
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     implementation 'com.github.ben-manes.caffeine:caffeine:3.0.4'
@@ -40,10 +41,25 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
     testImplementation 'org.codehaus.groovy:groovy-all:3.0.8'
+    testImplementation 'org.spockframework:spock-spring:2.1-M2-groovy-2.5'
 }
 
 compileJava {
     options.compilerArgs << '-Xlint:unchecked'
+}
+
+sourceSets {
+    integration {
+        groovy.srcDir("$projectDir/src/integration/groovy")
+        resources.srcDir("$projectDir/src/integration/resources")
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+}
+
+configurations {
+    integrationImplementation.extendsFrom testImplementation
+    integrationRuntime.extendsFrom testRuntime
 }
 
 test {
@@ -51,31 +67,28 @@ test {
     testLogging {
         events 'FAILED', 'SKIPPED'
     }
-
-     finalizedBy jacocoTestReport
 }
 
-apply from: 'gradle/integration-test.gradle'
-task integrationTest(type: Test) {
+task integration(type: Test) {
     useJUnitPlatform()
 
     group = 'verification'
-    testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
+    testClassesDirs = sourceSets.integration.output.classesDirs
+    classpath = sourceSets.integration.runtimeClasspath
 
     testLogging {
         events 'FAILED', 'SKIPPED'
     }
-
-     finalizedBy jacocoTestReport
 }
+
+check.dependsOn integration
 
 jacoco {
     toolVersion = "0.8.7"
 }
 
 jacocoTestReport {
-    dependsOn test, integrationTest
+    dependsOn test, integration
     reports {
         xml.required = false
         csv.required = false
@@ -90,10 +103,13 @@ jacocoTestReport {
                     'com/mkubica/managementservice/stub',
                     'com/mkubica/managementservice/util',
                     'com/mkubica/managementservice/exception',
-                    'com/mkubica/managementservice/ManagementServiceApplication.java',
             ])
         }))
     }
+}
+
+build {
+    finalizedBy jacocoTestReport
 }
 
 

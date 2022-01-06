@@ -72,23 +72,6 @@ services:
     env_file:
       - .env
 
-  test-service:
-    container_name: iot-tunnel-test-service
-    build: ./test-service
-    restart: on-failure
-    cap_add:
-      - NET_ADMIN
-    networks:
-      - default
-    depends_on:
-      - ca
-      - ovpn-server
-    volumes:
-      - common:/etc/common
-      - log:/var/log
-    env_file:
-      - .env
-
 
 networks:
   default:

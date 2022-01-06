@@ -1,9 +1,9 @@
 defaults:
   open-vpn:
-    internal-network-address: ${OVPN_INTERNAL_NETWORK_ADDRESS}
-    internal-network-mask: ${OVPN_INTERNAL_NETWORK_MASK}
-    external-address: ${OVPN_EXTERNAL_IP_ADDRESS}
-    external-port: ${OVPN_EXTERNAL_PORT}
+    internal-network-address: 10.8.0.0
+    internal-network-mask: 255.255.255.0
+    external-address: 1.1.1.1
+    external-port: 443
 
 spring:
   datasource:

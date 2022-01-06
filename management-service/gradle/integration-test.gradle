@@ -1,8 +1,0 @@
-sourceSets {
-    integrationTest {
-        groovy.srcDir('src/integrationTest/groovy')
-        resources.srcDir('src/integrationTest/resources')
-        compileClasspath += sourceSets.main.output + sourceSets.test.compileClasspath
-        runtimeClasspath += output + compileClasspath + sourceSets.test.runtimeClasspath
-    }
-}

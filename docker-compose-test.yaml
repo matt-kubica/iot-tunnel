@@ -1,0 +1,36 @@
+version: '3.3'
+
+
+services:
+
+  requester-service:
+    container_name: iot-tunnel-requester-service
+    build: ./e2e-tests/requester-service
+    restart: on-failure
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - default
+    depends_on:
+      - ca
+      - ovpn-server
+    env_file:
+      - .env
+      - ./e2e-tests/.env.test
+
+  gateway-service:
+    build: ./e2e-tests/gateway-service
+    env_file:
+      - ./e2e-tests/.env.test
+    deploy:
+      mode: replicated
+      replicas: 5
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - test
+
+networks:
+  test:
+    name: iot-tunnel-test-network
+    driver: bridge
