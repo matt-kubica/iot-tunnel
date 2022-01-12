@@ -1,0 +1,16 @@
+---
+
+- hosts: clients
+  become: yes
+  tasks:
+
+  - name: Update packages
+    apt:
+      update_cache: yes
+
+  - name: Upgrade packages
+    apt:
+      upgrade: yes
+
+  - name: Test connection with OpenVPN server
+    shell: ping -c 4 -i 1 -I tun0 {{ OVPN_INTERNAL_SERVER_ADDRESS }}

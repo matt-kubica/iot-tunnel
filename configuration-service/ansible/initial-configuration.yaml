@@ -1,0 +1,61 @@
+---
+
+- hosts: all
+  vars:
+    ansible_connection: ssh
+    ansible_ssh_user: pi
+    ansible_ssh_pass: raspberry
+
+    MANAGEMENT_SERVICE_ADDRESS: 127.0.0.1
+    MANAGEMENT_SERVICE_PORT: 8080
+    OVPN_INTERNAL_SERVER_ADDRESS: 10.10.10.1
+  become: yes
+  tasks:
+
+  - name: Update packages
+    apt:
+      update_cache: yes
+
+  - name: Install necessary packages
+    apt:
+      pkg:
+      - openvpn
+      - openvpn-systemd-resolved
+
+  - name: Obtain MAC address
+    shell: cat /sys/class/net/eth0/address
+    register: MAC_ADDRESS
+
+  - name: Register self in management-service
+    uri:
+      url: "http://{{ MANAGEMENT_SERVICE_ADDRESS }}:{{ MANAGEMENT_SERVICE_PORT }}/gateway"
+      method: POST
+      body_format: json
+      body: '{ "commonName": "{{ MAC_ADDRESS.stdout }}" }'
+      headers:
+        Content-Type: application/json
+
+  - name: Download ovpn config
+    get_url:
+      url: "http://{{ MANAGEMENT_SERVICE_ADDRESS }}:{{ MANAGEMENT_SERVICE_PORT }}/gateway-config/{{ MAC_ADDRESS.stdout }}"
+      dest: /etc/openvpn/client.conf
+      owner: root
+
+  - name: Configure OpenVPN to autostart
+    copy:
+      dest: /etc/default/openvpn
+      content: AUTOSTART="all"
+      owner: root
+
+  - name: Start OpenVPN client service
+    systemd:
+      name: openvpn@client
+      state: started
+      enabled: yes
+      daemon_reload: yes
+
+  - name: Reboot machine
+    reboot:
+
+  - name: Test connection with OpenVPN server
+    shell: ping -c 4 -i 1 -I tun0 {{ OVPN_INTERNAL_SERVER_ADDRESS }}

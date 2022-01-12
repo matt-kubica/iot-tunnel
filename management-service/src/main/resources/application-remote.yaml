@@ -23,3 +23,6 @@ spring:
     password: admin
   jpa:
     generate-ddl: true
+
+server:
+  port: ${MANAGEMENT_SERVICE_PORT}
