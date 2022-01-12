@@ -72,6 +72,23 @@ services:
     env_file:
       - .env
 
+  configuration-service:
+    container_name: iot-tunnel-configuration-service
+    build: ./configuration-service
+    restart: on-failure
+    networks:
+      - default
+    depends_on:
+      - ca
+      - ovpn-server
+      - management-service
+    volumes:
+      - log:/var/log
+    env_file:
+      - .env
+    cap_add:
+      - NET_ADMIN
+
 
 networks:
   default:

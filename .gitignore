@@ -1,3 +1,6 @@
+### MacOS ##
+.DS_Store
+
 ### pem files ##
 aws-key.pem
 
@@ -38,3 +41,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### PipEnv ###
+Pipfile
+Pipfile.lock
