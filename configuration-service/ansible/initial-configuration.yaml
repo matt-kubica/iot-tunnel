@@ -5,6 +5,7 @@
     ansible_connection: ssh
     ansible_ssh_user: pi
     ansible_ssh_pass: raspberry
+    ansible_python_interpreter: /usr/bin/python3
 
     MANAGEMENT_SERVICE_ADDRESS: 127.0.0.1
     MANAGEMENT_SERVICE_PORT: 8080
@@ -21,6 +22,20 @@
       pkg:
       - openvpn
       - openvpn-systemd-resolved
+      - libffi-dev
+      - libssl-dev
+      - python3
+      - python3-pip
+
+  - name: Get docker installation script
+    get_url:
+      url: "https://get.docker.com"
+      dest: /tmp/get-docker.sh
+
+  - name: Install docker
+    shell: sh /tmp/get-docker.sh
+    args:
+      creates: /usr/bin/docker
 
   - name: Obtain MAC address
     shell: cat /sys/class/net/eth0/address
@@ -53,6 +68,20 @@
       state: started
       enabled: yes
       daemon_reload: yes
+
+  - name: Install docker-python package
+    pip:
+      name: docker
+
+  - name: Pull image and start container for modbus-bridge
+    docker_container:
+      name: modbus-bridge
+      image: mkubica/modbus-bridge-dummy:latest
+      pull: yes
+      state: started
+      published_ports:
+        - 5020:5020
+      restart_policy: always
 
   - name: Reboot machine
     reboot:
