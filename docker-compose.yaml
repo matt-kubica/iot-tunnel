@@ -89,6 +89,23 @@ services:
     cap_add:
       - NET_ADMIN
 
+  monitoring-service:
+    container_name: iot-tunnel-monitoring-service
+    build: ./monitoring-service
+    restart: on-failure
+    networks:
+      - default
+    depends_on:
+      - ca
+      - ovpn-server
+      - management-service
+    volumes:
+      - log:/var/log
+    env_file:
+      - .env
+    cap_add:
+      - NET_ADMIN
+
 
 networks:
   default:
