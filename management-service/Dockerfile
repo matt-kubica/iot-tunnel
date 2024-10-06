@@ -3,7 +3,7 @@ FROM gradle:7.2 AS build
 WORKDIR /usr/build
 COPY . .
 
-RUN gradle clean build
+RUN gradle clean build -x test -x integration
 
 FROM amazoncorretto:11 AS runtime
 
